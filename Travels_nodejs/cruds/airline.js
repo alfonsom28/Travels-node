@@ -1,20 +1,20 @@
 const { Client }=require('pg');
-
+const prop=require('../utilities/config');
 
 const connectionData = {
-  user: 'postgres',
+  user: prop.user,
   host: 'localhost',
-  database: 'aeropuerto',
-  password: 'Daniela21',
+  database: prop.database,
+  password: prop.password,
   port: 5432,
 }
 const client=new Client(connectionData);
 
-module.exports.insertAir=function(name,peso){
+module.exports.insertAir=async function(name,peso){
 
-    client.connect();
+    await client.connect();
   
-    client.query('insert into airline (name,weight) values ($1,$2)',[name,peso])
+    await awaitclient.query(prop.insert_aerolinea,[name,peso])
         .then(response => {
            console.log(response);
             return true;
@@ -29,11 +29,11 @@ module.exports.insertAir=function(name,peso){
     
 }
 
-module.exports.selectAir=function(name){
+module.exports.selectAir= async function(name){
 
-    client.connect();
+    await client.connect();
   
-    client.query(' select * from airline where name=$1',[name])
+    await client.query(prop.select_aerolinea,[name])
         .then(response => {
            console.log(response);
             return response.rows;
@@ -47,14 +47,15 @@ module.exports.selectAir=function(name){
 
 }
 
-module.exports.updatePeso=function(peso,name){
+module.exports.updatePeso=async function(peso,name){
 
 
 
-    client.connect();
+  await client.connect();
   
-client.query('update airline set weight=$1 where name=$2',[peso,name])
-    .then(response => {
+await client.query(prop.update_peso,[id])
+  
+     .then(response => {
        console.log(response);
         return true;
         client.end()
@@ -67,11 +68,11 @@ client.query('update airline set weight=$1 where name=$2',[peso,name])
 }
 
 
-module.exports.deleteAir=function(id){
+module.exports.deleteAir=async function(id){
 
-    client.connect();
+    await client.connect();
   
-client.query('delete from airline where name=$1',[id])
+await client.query(prop.delete_aerolinea,[id])
     .then(response => {
        console.log(response);
         return true;

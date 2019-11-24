@@ -1,19 +1,19 @@
 const { Client }=require('pg');
-
+const prop=require('../utilities/config');
 
 const connectionData = {
-  user: 'postgres',
+  user: prop.user,
   host: 'localhost',
-  database: 'aeropuerto',
-  password: 'Daniela21',
+  database: prop.database,
+  password: prop.password,
   port: 5432,
 }
 const client=new Client(connectionData);
 
-module.exports.insertBoleto=function(clase,user,fly){
-    client.connect();
+module.exports.insertBoleto=async function(clase,user,fly){
+    await client.connect();
   
-client.query('insert into boleto (clase,id_users,id_fly) values($1,$2,$3)',[clase,user,fly])
+await client.query(prop.insert_boleto,[clase,user,fly])
     .then(response => {
       
         return true;
@@ -26,11 +26,11 @@ client.query('insert into boleto (clase,id_users,id_fly) values($1,$2,$3)',[clas
     })
 
 }
-module.exports.selectBoletoFly=function(fly){
+module.exports.selectBoletoFly=async function(fly){
 
-    client.connect();
+    await client.connect();
   
-client.query('select * from boletos where id_fly=$1',[id])
+await client.query(prop.select_boletofly,[id])
     .then(response => {
       
         return response.rows;
@@ -43,10 +43,10 @@ client.query('select * from boletos where id_fly=$1',[id])
     })
 
 }
-module.exports.selectBoletUser=function(id){
-client.connect();
+module.exports.selectBoletUser=async function(id){
+await client.connect();
   
-client.query('select * from boletos where id_users=$1',[id])
+await client.query(prop.select_boletouser,[id])
     .then(response => {
       
         return response.rows;
@@ -59,12 +59,12 @@ client.query('select * from boletos where id_users=$1',[id])
     })
 }
 
-module.exports.deleteBoleto=function(id){
+module.exports.deleteBoletoFly=async function(id){
 
 
-    client.connect();
+   await  client.connect();
   
-client.query('delete from boleto where id_boleto=$1',[id])
+await client.query(prop.delete_boletofly,[id])
     .then(response => {
       
         return true;
@@ -77,3 +77,21 @@ client.query('delete from boleto where id_boleto=$1',[id])
     })
 
 }
+module.exports.deleteBoletoUser=async function(id){
+
+
+    await  client.connect();
+   
+ await client.query(prop.delete_boletoUser,[id])
+     .then(response => {
+       
+         return true;
+         client.end()
+     })
+     .catch(err => {
+       console.log("error:"+err)
+       return false;
+         client.end()
+     })
+ 
+ }

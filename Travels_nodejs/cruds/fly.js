@@ -1,19 +1,19 @@
 const { Client }=require('pg');
-
+const pro=require('../utilities/config');
 
 const connectionData = {
-  user: 'postgres',
+  user: prompt.user,
   host: 'localhost',
-  database: 'aeropuerto',
-  password: 'Daniela21',
+  database: prompt.database,
+  password: prompt.password,
   port: 5432,
 }
 const client=new Client(connectionData);
-module.exports.insertFly=function(capacity,date,cost,hour,id_place,place_id_place,id_airline){
+module.exports.insertFly=async function(capacity,date,cost,hour,id_place,place_id_place,id_airline){
 
-    client.connect();
+    await client.connect();
   
-    client.query('insert into fly (capacity,date,cost,hour,id_place,place_id_place,id_airline) values($1,$2,$3,$4,$5,$6,$7)',[capacity,date,cost,hour,id_place,place_id_place,id_airline])
+   await  client.query(prop.insertFly,[capacity,date,cost,hour,id_place,place_id_place,id_airline])
         .then(response => {
           
             return true;
@@ -29,12 +29,12 @@ module.exports.insertFly=function(capacity,date,cost,hour,id_place,place_id_plac
 
 }
 
-module.exports.selectFlyAir=function(id){
+module.exports.selectFlyAir=async function(id){
 
 
-    client.connect();
+   await  client.connect();
   
-    client.query('select * from fly where id_airline=$1',[id])
+   await  client.query(prop.selectFlyAir,[id])
         .then(response => {
           
             return response.rows;
@@ -48,11 +48,11 @@ module.exports.selectFlyAir=function(id){
 
 }
 
-module.exports.selectFlyPlace=function(id){
+module.exports.selectFlyPlace=async function(id){
 
-    client.connect();
+   await client.connect();
   
-    client.query('select * from fly where id_place=$1 ',[id])
+    await client.query(prop.selectFlyPlace,[id])
         .then(response => {
           
             return response.rows;
@@ -69,12 +69,12 @@ module.exports.selectFlyPlace=function(id){
 }
 
 
-module.exports.deleteFly=function(id){
+module.exports.deleteFly=async function(id){
 
 
-    client.connect();
+    await client.connect();
   
-    client.query('delete from fly where id_fly=$1',[id])
+    await client.query(prop.deleteFly,[id])
         .then(response => {
           
             return true;

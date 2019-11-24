@@ -1,24 +1,25 @@
 const { Client }=require('pg');
-
+const prop=require('../utilities/config');
 
 const connectionData = {
-  user: 'postgres',
+  user: prop.user,
   host: 'localhost',
-  database: 'aeropuerto',
-  password: 'Daniela21',
+  database: prop.database,
+  password: prop.password,
   port: 5432,
 }
 const client=new Client(connectionData);
 
-module.exports.newUser=function(name,lastname,password,birthdate,sex,email){
+module.exports.newUser=async function(name,lastname,password,birthdate,sex,email){
 
 
 
-  client.connect();
+  await client.connect();
   
-client.query('insert into users (name,lastname,password,sex, birthdate,email) values ($1,$2,$3,$4,$5,$6)',[name,lastname,password,birthdate,sex,email])
+await client.query(prop.insert_user,[name,lastname,password,birthdate,sex,email])
     .then(response => {
        console.log(response);
+       
         return true;
         client.end()
     })
@@ -31,22 +32,24 @@ client.query('insert into users (name,lastname,password,sex, birthdate,email) va
 
 }//insert
 
-module.exports.selectUser=function(email,pass){
+module.exports.selectUser=async function(email,pass){
 
-  client.connect();
+  await client.connect();
   
-  client.query('select * from users where email=$1',[email])
+  await client.query(prop.select_user,[email])
       .then(response => {
-         console.log("pase por aqui" + response)
+         console.log("pase por aqui" + response.rows[0])
 var g;
 if(response.rows[0].password==pass){
   g=true;
 }else{
   g=false;
 }
-console.log(response.rows[0].id_users);
-          return response.rows;
-          client.end()
+ console.log(response.rows[0].id_users);
+          return g;
+           client.end()
+
+           
       })
       .catch(err => {
         console.log("error:"+err)
@@ -54,10 +57,10 @@ console.log(response.rows[0].id_users);
           client.end()
       })
 }
-module.exports.updateEmail=function(email,id){
-  client.connect();
+module.exports.updateEmail=async function(email,id){
+  await client.connect();
   
-  client.query('update users set email=$1 where id_users=$2',[email,id])
+  await client.query(prop.updateEmail,[email,id])
       .then(response => {
          console.log("pase por aqui" + response)
 
@@ -75,10 +78,10 @@ module.exports.updateEmail=function(email,id){
 }
 
 
-  module.exports.deleteUser=function(id){
-    client.connect();
+  module.exports.deleteUser=async function(id){
+    await client.connect();
   
-    client.query('delete from users where email=$1',[id])
+    await client.query(prop.delete_users,[id])
         .then(response => {
            console.log("pase por aqui" + response)
   
